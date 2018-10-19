@@ -58,11 +58,11 @@
         }
     },
     "variables": {
-        "applicationGatewayName": "saihcrudtest",
+        "applicationGatewayName": "[concat(resourceGroup().name, '-appgw')]",
         "idName" : "identity",
-        "keyVaultName": "[concat('saiTestKV-', resourceGroup().name)]",
-        "publicIPAddressName": "saiPublicIp140",
-        "virtualNetworkName": "vnet140",
+        "keyVaultName": "[concat(resourceGroup().name, '-kv')]",
+        "publicIPAddressName": "[concat(resourceGroup().name, '-publicIp')]",
+        "virtualNetworkName": "[concat(resourceGroup().name, '-vnet')]",
         "subnetName": "subnet1",
         "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
         "subnetRef": "[concat(variables('vnetID' ),'/subnets/',variables('subnetName'))]",
@@ -72,7 +72,7 @@
         "apiVersion10": "2018-08-01",
         "identityID": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities',variables('idName'))]",
         "keyVaultID": "[resourceId('Microsoft.KeyVault/vaults',variables('keyVaultName'))]",
-        "nsgName": "vmssnsg6"
+        "nsgName": "[concat(resourceGroup().name, '-vmssnsg')]"
     },
     "resources": [
         {
@@ -375,9 +375,15 @@
                                 {
                                     "name": "RWRule1",
                                     "actionSet": {
-                                        "responseHeaderConfigurations": [
+                                        "requestHeaderConfigurations": [
                                             {
                                                 "headerName": "hello",
+                                                "headerValue": "world"
+                                            }
+                                        ],
+                                        "responseHeaderConfigurations": [
+                                            {
+                                                "headerName": "Resp-hello",
                                                 "headerValue": "world"
                                             }
                                         ]

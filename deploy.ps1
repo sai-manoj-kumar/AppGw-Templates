@@ -36,9 +36,8 @@ param(
  [string]
  $resourceGroupLocation = "centraluseuap",
 
- [Parameter(Mandatory=$True)]
  [string]
- $deploymentName,
+ $deploymentName = "deployment1",
 
  [string]
  $templateFilePath = "template.json",
@@ -68,7 +67,7 @@ $ErrorActionPreference = "Stop"
 
 # sign in
 Write-Host "Logging in...";
-# Login-AzureRmAccount;
+#Login-AzureRmAccount;
 
 # select subscription
 Write-Host "Selecting subscription '$subscriptionId'";
@@ -101,7 +100,7 @@ else{
 # Start the deployment
 Write-Host "Starting deployment...";
 if(Test-Path $parametersFilePath) {
-    $lasterror = New-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile $templateFilePath -TemplateParameterFile $parametersFilePath;
+    $lasterror = New-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile $templateFilePath -TemplateParameterFile $parametersFilePath
 } else {
     New-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile $templateFilePath
 }
