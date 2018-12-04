@@ -345,10 +345,10 @@
                       },
                       "backendHttpSettings": {
                         "id": "[concat(variables('applicationGatewayID'), '/backendHttpSettingsCollection/appGatewayBackendHttpSettings')]"
-                      },
-                      "rewriteRuleSet" : {
-                          "id" : "[concat(variables('applicationGatewayID'), '/rewriteRuleSets/RewriteRuleSet1')]"
-                      }
+                    },
+                    "rewriteRuleSet" : {
+                        "id" : "[concat(variables('applicationGatewayID'), '/rewriteRuleSets/RewriteRuleSet1')]"
+                    }
                     }
                   },
                   {
@@ -393,7 +393,7 @@
                         },
                         "type": "Microsoft.Network/applicationGateways/rewriteRuleSets"
                     }
-                ]        
+                ]   
             }
         }
     ]

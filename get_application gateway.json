@@ -1,0 +1,167 @@
+{
+  "AfdOriginParameters": null,
+  "ApplicationGatewayFeatureFlag": 0,
+  "ApplicationGatewayManagedIdentityKeyVaultSecretId": null,
+  "ApplicationGatewayMonitoringConfig": {
+    "ReqRespMonitoringConfigs": [
+      "All"
+    ],
+    "WafMonitoringConfigs": [
+      "All"
+    ]
+  },
+  "ApplicationGatewayVmSku": "",
+  "AuthCertificates": [],
+  "AuthenticationSecrets": [],
+  "AutoscaleConfiguration": null,
+  "AutoscaleRunTimeParameters": [],
+  "Config": {
+    "BackendAddressPools": [
+      {
+        "BackendServersInfo": {},
+        "IPAddresses": [
+          "137.116.54.76"
+        ],
+        "Name": "appGatewayBackendPool"
+      }
+    ],
+    "BackendHttpSettingsList": [
+      {
+        "AffinityCookieName": "ApplicationGatewayAffinity",
+        "AuthenticationCertificates": [],
+        "CookieBasedAffinity": "Disabled",
+        "Name": "appGatewayBackendHttpSettings",
+        "Port": 80,
+        "Protocol": "Http",
+        "RequestTimeout": 30
+      }
+    ],
+    "DisableWafBilling": false,
+    "EnableFIPS": false,
+    "EnableMultiVip": true,
+    "FrontendIPConfigurations": [
+      {
+        "IdleTimeoutInMinutes": 4,
+        "IPAddressVersion": "IPv4",
+        "Name": "appGatewayFrontendIP",
+        "NrpPublicIPResourceId": "/subscriptions/f7e1a56e-347b-4103-87c7-e775a3e11ac5/resourceGroups/saiappgw/providers/Microsoft.Network/publicIPAddresses/saiappgw-publicIp",
+        "StaticIPAddress": "13.86.125.134",
+        "Type": "Public"
+      }
+    ],
+    "FrontendPorts": [
+      {
+        "Name": "appGatewayFrontendPort1",
+        "Port": 443
+      },
+      {
+        "Name": "appGatewayFrontendPort2",
+        "Port": 80
+      }
+    ],
+    "HttpListeners": [
+      {
+        "FrontendIP": "appGatewayFrontendIP",
+        "FrontendPort": "appGatewayFrontendPort1",
+        "Name": "appGatewayHttpsListener",
+        "Protocol": "Https",
+        "RequireServerNameIndication": "False",
+        "SslCert": "appGatewaySslCert"
+      },
+      {
+        "FrontendIP": "appGatewayFrontendIP",
+        "FrontendPort": "appGatewayFrontendPort2",
+        "Name": "appGatewayHttpListener",
+        "Protocol": "Http",
+        "RequireServerNameIndication": "False"
+      }
+    ],
+    "HttpLoadBalancingRules": [
+      {
+        "BackendAddressPool": "appGatewayBackendPool",
+        "BackendHttpSettings": "appGatewayBackendHttpSettings",
+        "Listener": "appGatewayHttpListener",
+        "Name": "rule1",
+        "Type": "Basic"
+      },
+      {
+        "BackendAddressPool": "appGatewayBackendPool",
+        "BackendHttpSettings": "appGatewayBackendHttpSettings",
+        "Listener": "appGatewayHttpsListener",
+        "Name": "rule2",
+        "Type": "Basic"
+      }
+    ],
+    "Probes": [],
+    "RedirectSettings": [],
+    "UrlPathMaps": []
+  },
+  "ConfigSasUrl": "https://nfvprodmaindm.blob.core.windows.net/applicationgatewaydeployment1/VMSSApplicationGatewayConfiguration/4d1f9e86-b352-4db0-9039-217e12dd2828.json?sv=2017-04-17&sr=b&sig=mWlDDup20deRujRMgbWjYia10zDqlven5YskJ%2F9zrBY%3D&se=2020-10-21T08:35:55Z&sp=r",
+  "ConfigTimeStamp": "2018-10-22T08:39:31",
+  "ConfigVersion": 1,
+  "CustomerSubscriptionId": "f7e1a56e-347b-4103-87c7-e775a3e11ac5",
+  "DeploymentId": "4d1f9e86-b352-4db0-9039-217e12dd2828",
+  "DeploymentType": "VMSS",
+  "Description": null,
+  "DnsName": "",
+  "FabricGeoIdName": "",
+  "GatewayEncryptionCertificateThumbprint": "",
+  "GatewayId": "4d1f9e86-b352-4db0-9039-217e12dd2828",
+  "GatewayName": "saiappgw-appgw",
+  "GatewaySize": "Medium",
+  "GatewaySubscriptionId": "8947e29f-aec1-4641-b103-9d37b4c31dee",
+  "GatewayVersion": "1.0.0.1",
+  "GroupName": "saiappgw",
+  "HostedServiceName": "4d1f9e86-b352-4db0-9039-217e12dd2828",
+  "InstanceCount": 2,
+  "Instances": [
+    {
+      "IpAddress": "10.0.0.4",
+      "Name": "appgw_0",
+      "VMSSInstanceId": "0"
+    },
+    {
+      "IpAddress": "10.0.0.6",
+      "Name": "appgw_2",
+      "VMSSInstanceId": "2"
+    }
+  ],
+  "InternalSecrets": null,
+  "LocationConstraint": "Central US",
+  "ManagedUserImage": "/subscriptions/aae0ff0d-2a27-4481-b0a3-de95a83addff/resourceGroups/appgwimagecentralus/providers/Microsoft.Compute/images/appgw-u1604-ti3-v1-Copy1",
+  "MdsStorageAccount": "",
+  "MigrationState": "",
+  "PartnerSubscriptions": [],
+  "PhysicalZones": [],
+  "RatingRegion": "Zone1",
+  "RegisteredFeatures": [
+    "ExcludeFromVmssBilling"
+  ],
+  "ResourceUri": "/subscriptions/f7e1a56e-347b-4103-87c7-e775a3e11ac5/resourceGroups/saiappgw/providers/Microsoft.Network/applicationGateways/saiappgw-appgw",
+  "SkuType": "Standard_v2",
+  "SslCertificates": null,
+  "SslSecrets": [
+    {
+      "Name": "appGatewaySslCert",
+      "SecretId": "https://saiappgw-kv.vault.azure.net/secrets/sslcert"
+    }
+  ],
+  "State": "Running",
+  "Subnets": [
+    "subnet1"
+  ],
+  "SubState": null,
+  "TimeStamp": "2018-10-22T08:39:31.866202Z",
+  "UserTags": null,
+  "VirtualIPs": [
+    "13.86.125.134"
+  ],
+  "VirtualIPsWithDetails": null,
+  "VmssAppGwInternalLoadBalancerExists": false,
+  "VmssName": "appgw",
+  "VmssNicNsgReference": "/subscriptions/f7e1a56e-347b-4103-87c7-e775a3e11ac5/resourceGroups/saiappgw/providers/Microsoft.Network/networkSecurityGroups/_e41f87a2_AppGwNsg-4d1f9e86-b352-4db0-9039-217e12dd2828",
+  "VmssNrpSubnetUri": "/subscriptions/f7e1a56e-347b-4103-87c7-e775a3e11ac5/resourceGroups/saiappgw/providers/Microsoft.Network/virtualNetworks/saiappgw-vnet/subnets/subnet1",
+  "VmssResourceUri": "",
+  "VnetId": "38638754-5990-47d6-919b-409ef334d0d5",
+  "VnetName": "saiappgw-vnet"
+}

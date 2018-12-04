@@ -65,9 +65,21 @@ Function RegisterRP {
 #******************************************************************************
 $ErrorActionPreference = "Stop"
 
-# sign in
-Write-Host "Logging in...";
-#Login-AzureRmAccount;
+function Login
+{
+    if ([string]::IsNullOrEmpty($(Get-AzureRmContext).Account)) 
+    {
+        Write-Host "Not Logged in yet";
+        Login-AzureRmAccount
+    }
+    else 
+    {
+        Write-Host "Already Logged in";
+    }
+}
+
+# Login if not already logged in
+Login
 
 # select subscription
 Write-Host "Selecting subscription '$subscriptionId'";
