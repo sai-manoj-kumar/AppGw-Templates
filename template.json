@@ -69,7 +69,7 @@
         "publicIPRef": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]",
         "applicationGatewayID": "[resourceId('Microsoft.Network/applicationGateways',variables('applicationGatewayName'))]",
         "apiVersion": "2018-08-01",
-        "apiVersion10": "2018-08-01",
+        "gwApiVersion": "2018-10-01",
         "identityID": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities',variables('idName'))]",
         "keyVaultID": "[resourceId('Microsoft.KeyVault/vaults',variables('keyVaultName'))]",
         "nsgName": "[concat(resourceGroup().name, '-vmssnsg')]"
@@ -216,7 +216,7 @@
             }
         },
         {
-            "apiVersion": "[variables('apiVersion10')]",
+            "apiVersion": "[variables('gwApiVersion')]",
             "name": "[variables('applicationGatewayName')]",
             "type": "Microsoft.Network/applicationGateways",
             "location": "[resourceGroup().location]",
@@ -379,11 +379,19 @@
                                             {
                                                 "headerName": "hello",
                                                 "headerValue": "world"
+                                            },
+                                            {
+                                                "headerName": "X-Forwarded-For",
+                                                "headerValue": "source IP"
+                                            },
+                                            {
+                                                "headerName": "X-Forwarded-Port",
+                                                "headerValue": "8090"
                                             }
                                         ],
                                         "responseHeaderConfigurations": [
                                             {
-                                                "headerName": "Resp-hello",
+                                                "headerName": "X-Forwarding-For",
                                                 "headerValue": "world"
                                             }
                                         ]

@@ -1,0 +1,288 @@
+{
+    "name": "saihcrudhftest2-appgw",
+    "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw",
+    "etag": "W/\"98735b93-de4b-4fbc-a75f-fec5afbe2b1f\"",
+    "type": "Microsoft.Network/applicationGateways",
+    "location": "centraluseuap",
+    "identity": {
+        "type": "userAssigned",
+        "identityIds": [
+            "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.ManagedIdentity/userAssignedIdentities/identity"
+        ]
+    },
+    "properties": {
+        "provisioningState": "Succeeded",
+        "resourceGuid": "94f6656e-1300-497a-bc44-846ca2bbe163",
+        "sku": {
+            "name": "Standard_v2",
+            "tier": "Standard_v2",
+            "capacity": 2
+        },
+        "operationalState": "Running",
+        "gatewayIPConfigurations": [
+            {
+                "name": "appGatewayIpConfig",
+                "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/gatewayIPConfigurations/appGatewayIpConfig",
+                "etag": "W/\"98735b93-de4b-4fbc-a75f-fec5afbe2b1f\"",
+                "properties": {
+                    "provisioningState": "Succeeded",
+                    "subnet": {
+                        "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/virtualNetworks/saihcrudhftest2-vnet/subnets/subnet1"
+                    }
+                },
+                "type": "Microsoft.Network/applicationGateways/gatewayIPConfigurations"
+            }
+        ],
+        "sslCertificates": [
+            {
+                "name": "appGatewaySslCert",
+                "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/sslCertificates/appGatewaySslCert",
+                "etag": "W/\"98735b93-de4b-4fbc-a75f-fec5afbe2b1f\"",
+                "properties": {
+                    "provisioningState": "Succeeded",
+                    "keyVaultSecretId": "https://saihcrudhftest2-kv.vault.azure.net/secrets/sslcert",
+                    "httpListeners": [
+                        {
+                            "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/httpListeners/appGatewayHttpsListener"
+                        }
+                    ]
+                },
+                "type": "Microsoft.Network/applicationGateways/sslCertificates"
+            }
+        ],
+        "trustedRootCertificates": [],
+        "frontendIPConfigurations": [
+            {
+                "name": "appGatewayFrontendIP",
+                "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/frontendIPConfigurations/appGatewayFrontendIP",
+                "etag": "W/\"98735b93-de4b-4fbc-a75f-fec5afbe2b1f\"",
+                "type": "Microsoft.Network/applicationGateways/frontendIPConfigurations",
+                "properties": {
+                    "provisioningState": "Succeeded",
+                    "privateIPAllocationMethod": "Dynamic",
+                    "publicIPAddress": {
+                        "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/publicIPAddresses/saihcrudhftest2-publicIp"
+                    },
+                    "httpListeners": [
+                        {
+                            "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/httpListeners/appGatewayHttpsListener"
+                        },
+                        {
+                            "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/httpListeners/appGatewayHttpListener"
+                        }
+                    ]
+                }
+            }
+        ],
+        "frontendPorts": [
+            {
+                "name": "appGatewayFrontendPort1",
+                "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/frontendPorts/appGatewayFrontendPort1",
+                "etag": "W/\"98735b93-de4b-4fbc-a75f-fec5afbe2b1f\"",
+                "properties": {
+                    "provisioningState": "Succeeded",
+                    "port": 443,
+                    "httpListeners": [
+                        {
+                            "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/httpListeners/appGatewayHttpsListener"
+                        }
+                    ]
+                },
+                "type": "Microsoft.Network/applicationGateways/frontendPorts"
+            },
+            {
+                "name": "appGatewayFrontendPort2",
+                "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/frontendPorts/appGatewayFrontendPort2",
+                "etag": "W/\"98735b93-de4b-4fbc-a75f-fec5afbe2b1f\"",
+                "properties": {
+                    "provisioningState": "Succeeded",
+                    "port": 80,
+                    "httpListeners": [
+                        {
+                            "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/httpListeners/appGatewayHttpListener"
+                        }
+                    ]
+                },
+                "type": "Microsoft.Network/applicationGateways/frontendPorts"
+            }
+        ],
+        "backendAddressPools": [
+            {
+                "name": "appGatewayBackendPool",
+                "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/backendAddressPools/appGatewayBackendPool",
+                "etag": "W/\"98735b93-de4b-4fbc-a75f-fec5afbe2b1f\"",
+                "properties": {
+                    "provisioningState": "Succeeded",
+                    "backendAddresses": [
+                        {
+                            "ipAddress": "137.116.54.76"
+                        }
+                    ],
+                    "requestRoutingRules": [
+                        {
+                            "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/requestRoutingRules/rule1"
+                        },
+                        {
+                            "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/requestRoutingRules/rule2"
+                        }
+                    ]
+                },
+                "type": "Microsoft.Network/applicationGateways/backendAddressPools"
+            }
+        ],
+        "backendHttpSettingsCollection": [
+            {
+                "name": "appGatewayBackendHttpSettings",
+                "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/backendHttpSettingsCollection/appGatewayBackendHttpSettings",
+                "etag": "W/\"98735b93-de4b-4fbc-a75f-fec5afbe2b1f\"",
+                "properties": {
+                    "provisioningState": "Succeeded",
+                    "port": 80,
+                    "protocol": "Http",
+                    "cookieBasedAffinity": "Disabled",
+                    "pickHostNameFromBackendAddress": false,
+                    "requestTimeout": 30,
+                    "requestRoutingRules": [
+                        {
+                            "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/requestRoutingRules/rule1"
+                        },
+                        {
+                            "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/requestRoutingRules/rule2"
+                        }
+                    ]
+                },
+                "type": "Microsoft.Network/applicationGateways/backendHttpSettingsCollection"
+            }
+        ],
+        "httpListeners": [
+            {
+                "name": "appGatewayHttpsListener",
+                "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/httpListeners/appGatewayHttpsListener",
+                "etag": "W/\"98735b93-de4b-4fbc-a75f-fec5afbe2b1f\"",
+                "properties": {
+                    "provisioningState": "Succeeded",
+                    "frontendIPConfiguration": {
+                        "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/frontendIPConfigurations/appGatewayFrontendIP"
+                    },
+                    "frontendPort": {
+                        "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/frontendPorts/appGatewayFrontendPort1"
+                    },
+                    "protocol": "Https",
+                    "sslCertificate": {
+                        "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/sslCertificates/appGatewaySslCert"
+                    },
+                    "requireServerNameIndication": false,
+                    "requestRoutingRules": [
+                        {
+                            "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/requestRoutingRules/rule2"
+                        }
+                    ]
+                },
+                "type": "Microsoft.Network/applicationGateways/httpListeners"
+            },
+            {
+                "name": "appGatewayHttpListener",
+                "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/httpListeners/appGatewayHttpListener",
+                "etag": "W/\"98735b93-de4b-4fbc-a75f-fec5afbe2b1f\"",
+                "properties": {
+                    "provisioningState": "Succeeded",
+                    "frontendIPConfiguration": {
+                        "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/frontendIPConfigurations/appGatewayFrontendIP"
+                    },
+                    "frontendPort": {
+                        "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/frontendPorts/appGatewayFrontendPort2"
+                    },
+                    "protocol": "Http",
+                    "requireServerNameIndication": false,
+                    "requestRoutingRules": [
+                        {
+                            "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/requestRoutingRules/rule1"
+                        }
+                    ]
+                },
+                "type": "Microsoft.Network/applicationGateways/httpListeners"
+            }
+        ],
+        "urlPathMaps": [],
+        "requestRoutingRules": [
+            {
+                "name": "rule1",
+                "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/requestRoutingRules/rule1",
+                "etag": "W/\"98735b93-de4b-4fbc-a75f-fec5afbe2b1f\"",
+                "properties": {
+                    "provisioningState": "Succeeded",
+                    "ruleType": "Basic",
+                    "httpListener": {
+                        "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/httpListeners/appGatewayHttpListener"
+                    },
+                    "backendAddressPool": {
+                        "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/backendAddressPools/appGatewayBackendPool"
+                    },
+                    "backendHttpSettings": {
+                        "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/backendHttpSettingsCollection/appGatewayBackendHttpSettings"
+                    },
+                    "rewriteRuleSet": {
+                        "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/rewriteRuleSets/RewriteRuleSet1"
+                    }
+                },
+                "type": "Microsoft.Network/applicationGateways/requestRoutingRules"
+            },
+            {
+                "name": "rule2",
+                "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/requestRoutingRules/rule2",
+                "etag": "W/\"98735b93-de4b-4fbc-a75f-fec5afbe2b1f\"",
+                "properties": {
+                    "provisioningState": "Succeeded",
+                    "ruleType": "Basic",
+                    "httpListener": {
+                        "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/httpListeners/appGatewayHttpsListener"
+                    },
+                    "backendAddressPool": {
+                        "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/backendAddressPools/appGatewayBackendPool"
+                    },
+                    "backendHttpSettings": {
+                        "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/backendHttpSettingsCollection/appGatewayBackendHttpSettings"
+                    }
+                },
+                "type": "Microsoft.Network/applicationGateways/requestRoutingRules"
+            }
+        ],
+        "probes": [],
+        "rewriteRuleSets": [
+            {
+                "name": "RewriteRuleSet1",
+                "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/rewriteRuleSets/RewriteRuleSet1",
+                "etag": "W/\"98735b93-de4b-4fbc-a75f-fec5afbe2b1f\"",
+                "properties": {
+                    "provisioningState": "Succeeded",
+                    "rewriteRules": [
+                        {
+                            "name": "RWRule1",
+                            "actionSet": {
+                                "requestHeaderConfigurations": [
+                                    {
+                                        "headerName": "hello",
+                                        "headerValue": "world"
+                                    }
+                                ],
+                                "responseHeaderConfigurations": [
+                                    {
+                                        "headerName": "X-Forwarding-For",
+                                        "headerValue": "world"
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "requestRoutingRules": [
+                        {
+                            "id": "/subscriptions/1496a758-b2ff-43ef-b738-8e9eb5161a86/resourceGroups/saihcrudhftest2/providers/Microsoft.Network/applicationGateways/saihcrudhftest2-appgw/requestRoutingRules/rule1"
+                        }
+                    ]
+                },
+                "type": "Microsoft.Network/applicationGateways/rewriteRuleSets"
+            }
+        ],
+        "redirectConfigurations": []
+    }
+}
