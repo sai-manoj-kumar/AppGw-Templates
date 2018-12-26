@@ -12,7 +12,7 @@
             "value": "Standard_v2"
         },
         "backendIpAddress1": {
-            "value": "137.116.54.76"
+            "value": "saiwinvm1.eastus.cloudapp.azure.com"
         },
         "Secrets": {
             "value": [

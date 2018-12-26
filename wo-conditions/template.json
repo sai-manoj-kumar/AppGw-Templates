@@ -59,7 +59,7 @@
     },
     "variables": {
         "applicationGatewayName": "[concat(resourceGroup().name, '-appgw')]",
-        "idName" : "identity",
+        "idName": "identity",
         "keyVaultName": "[concat(resourceGroup().name, '-kv')]",
         "publicIPAddressName": "[concat(resourceGroup().name, '-publicIp')]",
         "virtualNetworkName": "[concat(resourceGroup().name, '-vnet')]",
@@ -87,13 +87,13 @@
             "apiVersion": "[parameters('KeyVaultVersion')]",
             "location": "[resourceGroup().location]",
             "properties": {
-              "sku": {
-                "name": "standard",
-                "family": "A"
-              },
-              "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
-              "accessPolicies": [],
-              "enableSoftDelete":true
+                "sku": {
+                    "name": "standard",
+                    "family": "A"
+                },
+                "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+                "accessPolicies": [],
+                "enableSoftDelete": true
             }
         },
         {
@@ -145,7 +145,10 @@
                 "name": "Standard"
             },
             "properties": {
-                "publicIPAllocationMethod": "Static"
+                "publicIPAllocationMethod": "Static",
+                "dnsSettings": {
+                    "domainNameLabel": "[resourceGroup().name]"
+                }
             }
         },
         {
@@ -227,18 +230,16 @@
             ],
             "identity": {
                 "type": "UserAssigned",
-                "identityIds":[
-                    "[variables('identityID')]"
-                ]
+                "userAssignedIdentities": {
+                    "[variables('identityID')]": {}
+                }
             },
             "properties": {
-              "sku": {
-                "name": "[parameters('skuName')]",
-                "tier": "Standard_v2",
-                "capacity":  2
-                
-              },
-              
+                "sku": {
+                    "name": "[parameters('skuName')]",
+                    "tier": "Standard_v2",
+                    "capacity": 2
+                },
                 "sslCertificates": [
                     {
                         "name": "appGatewaySslCert",
@@ -268,16 +269,16 @@
                     }
                 ],
                 "frontendPorts": [
-                  {
-                    "name": "appGatewayFrontendPort1",
-                    "properties": {
-                      "Port": 443
-                    }
-                  },
-                  {
+                    {
+                        "name": "appGatewayFrontendPort1",
+                        "properties": {
+                            "Port": 443
+                        }
+                    },
+                    {
                         "name": "appGatewayFrontendPort2",
                         "properties": {
-                          "Port": 80
+                            "Port": 80
                         }
                     }
                 ],
@@ -299,27 +300,31 @@
                         "properties": {
                             "Port": 80,
                             "Protocol": "Http",
-                            "CookieBasedAffinity": "Disabled"
+                            "CookieBasedAffinity": "Disabled",
+                            "PickHostNameFromBackendAddress": true,
+                            "probe": {
+                                "id": "[concat(variables('applicationGatewayID'), '/probes/HttpCustomProbe')]"
+                            }
                         }
                     }
                 ],
                 "httpListeners": [
-                  {
-                    "name": "appGatewayHttpsListener",
-                    "properties": {
-                      "FrontendIPConfiguration": {
-                        "Id": "[concat(variables('applicationGatewayID'), '/frontendIPConfigurations/appGatewayFrontendIP')]"
-                      },
-                      "FrontendPort": {
-                        "Id": "[concat(variables('applicationGatewayID'), '/frontendPorts/appGatewayFrontendPort1')]"
-                      },
-                      "Protocol": "Https",
-                      "SslCertificate": {
-                        "Id": "[concat(variables('applicationGatewayID'), '/sslCertificates/appGatewaySslCert')]"
-                      }
-                    }
-                  },
-                  {
+                    {
+                        "name": "appGatewayHttpsListener",
+                        "properties": {
+                            "FrontendIPConfiguration": {
+                                "Id": "[concat(variables('applicationGatewayID'), '/frontendIPConfigurations/appGatewayFrontendIP')]"
+                            },
+                            "FrontendPort": {
+                                "Id": "[concat(variables('applicationGatewayID'), '/frontendPorts/appGatewayFrontendPort1')]"
+                            },
+                            "Protocol": "Https",
+                            "SslCertificate": {
+                                "Id": "[concat(variables('applicationGatewayID'), '/sslCertificates/appGatewaySslCert')]"
+                            }
+                        }
+                    },
+                    {
                         "name": "appGatewayHttpListener",
                         "properties": {
                             "FrontendIPConfiguration": {
@@ -333,25 +338,25 @@
                     }
                 ],
                 "requestRoutingRules": [
-                  {
-                    "Name": "rule1",
-                    "properties": {
-                      "RuleType": "Basic",
-                      "httpListener": {
-                        "id": "[concat(variables('applicationGatewayID'), '/httpListeners/appGatewayHttpListener')]"
-                      },
-                      "backendAddressPool": {
-                        "id": "[concat(variables('applicationGatewayID'), '/backendAddressPools/appGatewayBackendPool')]"
-                      },
-                      "backendHttpSettings": {
-                        "id": "[concat(variables('applicationGatewayID'), '/backendHttpSettingsCollection/appGatewayBackendHttpSettings')]"
+                    {
+                        "Name": "rule1",
+                        "properties": {
+                            "RuleType": "Basic",
+                            "httpListener": {
+                                "id": "[concat(variables('applicationGatewayID'), '/httpListeners/appGatewayHttpListener')]"
+                            },
+                            "backendAddressPool": {
+                                "id": "[concat(variables('applicationGatewayID'), '/backendAddressPools/appGatewayBackendPool')]"
+                            },
+                            "backendHttpSettings": {
+                                "id": "[concat(variables('applicationGatewayID'), '/backendHttpSettingsCollection/appGatewayBackendHttpSettings')]"
+                            },
+                            "rewriteRuleSet": {
+                                "id": "[concat(variables('applicationGatewayID'), '/rewriteRuleSets/RewriteRuleSet1')]"
+                            }
+                        }
                     },
-                    "rewriteRuleSet" : {
-                        "id" : "[concat(variables('applicationGatewayID'), '/rewriteRuleSets/RewriteRuleSet1')]"
-                    }
-                    }
-                  },
-                  {
+                    {
                         "Name": "rule2",
                         "properties": {
                             "RuleType": "Basic",
@@ -373,25 +378,21 @@
                         "properties": {
                             "rewriteRules": [
                                 {
-                                    "name": "RWRule1",
+                                    "name": "RewriteRule1",
                                     "actionSet": {
                                         "requestHeaderConfigurations": [
                                             {
-                                                "headerName": "hello",
-                                                "headerValue": "world"
-                                            },
-                                            {
                                                 "headerName": "X-Forwarded-For",
-                                                "headerValue": "source IP"
+                                                "headerValue": "{var_client_Ip}"
                                             },
                                             {
                                                 "headerName": "X-Forwarded-Port",
-                                                "headerValue": "8090"
+                                                "headerValue": "client port is : {var_client_port}"
                                             }
                                         ],
                                         "responseHeaderConfigurations": [
                                             {
-                                                "headerName": "X-Forwarding-For",
+                                                "headerName": "Response-header",
                                                 "headerValue": "world"
                                             }
                                         ]
@@ -401,7 +402,28 @@
                         },
                         "type": "Microsoft.Network/applicationGateways/rewriteRuleSets"
                     }
-                ]   
+                ],
+                "probes": [
+                    {
+                        "name": "HttpCustomProbe",
+                        "properties": {
+                            "protocol": "Http",
+                            "path": "/",
+                            "interval": 30,
+                            "timeout": 30,
+                            "unhealthyThreshold": 3,
+                            "pickHostNameFromBackendHttpSettings": true,
+                            "minServers": 0,
+                            "match": {
+                                "body": "",
+                                "statusCodes": [
+                                    "200-399"
+                                ]
+                            }
+                        },
+                        "type": "Microsoft.Network/applicationGateways/probes"
+                    }
+                ]
             }
         }
     ]
