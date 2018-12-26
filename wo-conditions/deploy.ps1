@@ -58,6 +58,8 @@ elseif ($Subscription -eq "InternalSubscription1") {
     $subscriptionId = "f7e1a56e-347b-4103-87c7-e775a3e11ac5"
 }
 
+$resourceGroupName =  $env:UserName + "-" + $resourceGroupName
+
 <#
 .SYNOPSIS
     Registers RPs
