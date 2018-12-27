@@ -114,7 +114,7 @@ if (!$resourceGroup) {
     }
     Write-Host "Creating resource group '$resourceGroupName' in location '$resourceGroupLocation'";
     $now = Get-Date
-    New-AzureRmResourceGroup -Name $resourceGroupName -Location $resourceGroupLocation -Tag @{'CreatedBy' = $env:UserName; 'ExpiresBy' = $now.ToUniversalTime().AddDays(3).GetDateTimeFormats()[9]}
+    New-AzureRmResourceGroup -Name $resourceGroupName -Location $resourceGroupLocation -Tag @{'CreatedBy' = $env:UserName; 'ExpiresBy' = $now.ToUniversalTime().AddDays(3).GetDateTimeFormats()[8]}
 }
 else {
     Write-Host "Using existing resource group '$resourceGroupName'";
