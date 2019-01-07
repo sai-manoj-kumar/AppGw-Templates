@@ -221,6 +221,12 @@
                         "properties": {
                             "Port": 80
                         }
+                    },
+                    {
+                        "name": "Port8080",
+                        "properties": {
+                            "Port": 8080
+                        }
                     }
                 ],
                 "backendAddressPools": [
@@ -276,6 +282,18 @@
                             },
                             "Protocol": "Http"
                         }
+                    },
+                    {
+                        "name": "CustomPortHttpListener",
+                        "properties": {
+                            "FrontendIPConfiguration": {
+                                "Id": "[concat(variables('applicationGatewayID'), '/frontendIPConfigurations/appGatewayFrontendIP')]"
+                            },
+                            "FrontendPort": {
+                                "Id": "[concat(variables('applicationGatewayID'), '/frontendPorts/Port8080')]"
+                            },
+                            "Protocol": "Http"
+                        }
                     }
                 ],
                 "requestRoutingRules": [
@@ -291,6 +309,9 @@
                             },
                             "backendHttpSettings": {
                                 "id": "[concat(variables('applicationGatewayID'), '/backendHttpSettingsCollection/appGatewayBackendHttpSettings')]"
+                            },
+                            "rewriteRuleSet": {
+                                "id": "[concat(variables('applicationGatewayID'), '/rewriteRuleSets/rewriteRuleSet1')]"
                             }
                         }
                     },
@@ -311,6 +332,53 @@
                                 "id": "[concat(variables('applicationGatewayID'), '/rewriteRuleSets/rewriteRuleSet1')]"
                             }
                         }
+                    },
+                    {
+                        "Name": "PathBasedRule1",
+                        "properties": {
+                            "RuleType": "PathBasedRouting",
+                            "httpListener": {
+                                "id": "[concat(variables('applicationGatewayID'), '/httpListeners/CustomPortHttpListener')]"
+                            },
+                            "urlPathMap": {
+                                "id": "[concat(variables('applicationGatewayID'), '/urlPathMaps/urlPathMap1')]"
+                            }
+                        }
+                    }
+                ],
+                "urlPathMaps": [
+                    {
+                        "name": "urlPathMap1",
+                        "properties": {
+                            "defaultBackendAddressPool": {
+                                "id": "[concat(variables('applicationGatewayID'), '/backendAddressPools/appGatewayBackendPool')]"
+                            },
+                            "defaultBackendHttpSettings": {
+                                "id": "[concat(variables('applicationGatewayID'), '/backendHttpSettingsCollection/appGatewayBackendHttpSettings')]"
+                            },
+                            "defaultRewriteRuleSet": {
+                                "id": "[concat(variables('applicationGatewayID'), '/rewriteRuleSets/rewriteRuleSet2')]"
+                            },
+                            "pathRules":[
+                                {
+                                    "name": "api",
+                                    "properties":{
+                                        "paths":[
+                                            "/api/*"
+                                        ],
+                                        "backendAddressPool":{
+                                            "id": "[concat(variables('applicationGatewayID'), '/backendAddressPools/appGatewayBackendPool')]"
+                                        },
+                                        "backendHttpSettings": {
+                                            "id": "[concat(variables('applicationGatewayID'), '/backendHttpSettingsCollection/appGatewayBackendHttpSettings')]"
+                                        },
+                                        "rewriteRuleSet": {
+                                            "id": "[concat(variables('applicationGatewayID'), '/rewriteRuleSets/rewriteRuleSet3')]"
+                                        }            
+                                    }
+                                }
+                            ]
+                        }
                     }
                 ],
                 "rewriteRuleSets": [
@@ -322,12 +390,12 @@
                                     "ruleSequence": 100,
                                     "conditions": [
                                         {
-                                            "variable": "var_client_port",
-                                            "pattern": "435",
+                                            "variable": "var_client_ip",
+                                            "pattern": "",
                                             "ignoreCase": true
                                         }
                                     ],
-                                    "name": "rewriteRule1",
+                                    "name": "rewriteRule1_1",
                                     "actionSet": {
                                         "requestHeaderConfigurations": [
                                             {
@@ -344,8 +412,55 @@
                                     }
                                 }
                             ]
-                        },
-                        "type": "Microsoft.Network/applicationGateways/rewriteRuleSets"
+                        }
+                    },
+                    {
+                        "name": "rewriteRuleSet2",
+                        "properties": {
+                            "rewriteRules": [
+                                {
+                                    "name": "rewriteRule2_1",
+                                    "actionSet": {
+                                        "requestHeaderConfigurations": [
+                                            {
+                                                "headerName": "Accept-Charset",
+                                                "headerValue": "utf-8"
+                                            }
+                                        ],
+                                        "responseHeaderConfigurations": [
+                                            {
+                                                "headerName": "Content-MD5",
+                                                "headerValue": "Q2hlY2sgSW50ZWdyaXR5IQ=="
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "rewriteRuleSet3",
+                        "properties": {
+                            "rewriteRules": [
+                                {
+                                    "name": "rewriteRule3_1",
+                                    "actionSet": {
+                                        "requestHeaderConfigurations": [
+                                            {
+                                                "headerName": "Accept-Charset",
+                                                "headerValue": "utf-8"
+                                            }
+                                        ],
+                                        "responseHeaderConfigurations": [
+                                            {
+                                                "headerName": "Content-MD5",
+                                                "headerValue": "Q2hlY2sgSW50ZWdyaXR5IQ=="
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
                 ],
                 "probes": [
@@ -365,8 +480,7 @@
                                     "200-399"
                                 ]
                             }
-                        },
-                        "type": "Microsoft.Network/applicationGateways/probes"
+                        }
                     }
                 ]
             }

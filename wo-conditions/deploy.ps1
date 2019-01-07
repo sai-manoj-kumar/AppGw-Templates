@@ -26,6 +26,10 @@
 
 param(
     [string]
+    [ValidateSet("CentralUSSlice", "InternalSubscription1", "OtherSubscription")]
+    $Subscription = "OtherSubscription",
+
+    [string]
     $subscriptionId,
 
     [Parameter(Mandatory = $True)]
@@ -42,11 +46,7 @@ param(
     $templateFilePath = "template.json",
 
     [string]
-    $parametersFilePath = "parameters.json",
-
-    [string]
-    [ValidateSet("CentralUSSlice", "InternalSubscription1", "OtherSubscription")]
-    $Subscription = "OtherSubscription"
+    $parametersFilePath = "parameters.json"
 )
 
 if ($Subscription -eq "CentralUSSlice") {

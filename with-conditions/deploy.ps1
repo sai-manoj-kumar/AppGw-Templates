@@ -25,9 +25,9 @@
 #>
 
 param(
-    [Parameter]
     [string]
-    $subscriptionId,
+    [ValidateSet("CentralUSSlice", "InternalSubscription1", "OtherSubscription")]
+    $Subscription = "OtherSubscription",
 
     [Parameter(Mandatory = $True)]
     [string]
@@ -40,14 +40,13 @@ param(
     $deploymentName = "deployment1",
 
     [string]
+    $subscriptionId,
+
+    [string]
     $templateFilePath = "template.json",
 
     [string]
-    $parametersFilePath = "parameters.json",
-
-    [string]
-    [ValidateSet("CentralUSSlice", "InternalSubscription1", "OtherSubscription")]
-    $Subscription = "OtherSubscription"
+    $parametersFilePath = "parameters.json"
 )
 
 if ($Subscription -eq "CentralUSSlice") {
@@ -80,9 +79,18 @@ Function RegisterRP {
 #******************************************************************************
 $ErrorActionPreference = "Stop"
 
-# sign in
-Write-Host "Logging in...";
-# Login-AzureRmAccount;
+function Login {
+    if ([string]::IsNullOrEmpty($(Get-AzureRmContext).Account)) {
+        Write-Host "Not Logged in yet";
+        Login-AzureRmAccount
+    }
+    else {
+        Write-Host "Already Logged in";
+    }
+}
+
+# Login if not already logged in
+Login
 
 # select subscription
 Write-Host "Selecting subscription '$subscriptionId'";
