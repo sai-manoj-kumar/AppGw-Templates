@@ -37,10 +37,10 @@ param(
     $resourceGroupLocation,
 
     [string]
-    $deploymentName = "deployment1",
+    $subscriptionId,
 
     [string]
-    $subscriptionId,
+    $deploymentName = "deployment1",
 
     [string]
     $templateFilePath = "template.json",
@@ -59,6 +59,7 @@ elseif ($Subscription -eq "InternalSubscription1") {
 }
 
 $resourceGroupName =  $env:UserName + "-" + $resourceGroupName
+Enable-AzureRmAlias -Scope CurrentUser
 
 <#
 .SYNOPSIS
