@@ -68,7 +68,7 @@
         "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
         "publicIPRef": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]",
         "applicationGatewayID": "[resourceId('Microsoft.Network/applicationGateways',variables('applicationGatewayName'))]",
-        "apiVersion": "2018-10-01",
+        "apiVersion": "2018-12-01",
         "identityID": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities',variables('idName'))]",
         "keyVaultID": "[resourceId('Microsoft.KeyVault/vaults',variables('keyVaultName'))]"
     },
