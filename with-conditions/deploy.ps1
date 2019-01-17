@@ -34,7 +34,7 @@ param(
     $resourceGroupName,
 
     [string]
-    $resourceGroupLocation,
+    $resourceGroupLocation = "",
 
     [string]
     $subscriptionId,
@@ -54,11 +54,13 @@ if ($Subscription -eq "CentralUSSlice") {
     $subscriptionId = "1496a758-b2ff-43ef-b738-8e9eb5161a86"
 }
 elseif ($Subscription -eq "InternalSubscription1") {
-    $resourceGroupLocation = "eastus"
+    if ($resourceGroupLocation -eq "") {
+        $resourceGroupLocation = "eastus"
+    }
     $subscriptionId = "f7e1a56e-347b-4103-87c7-e775a3e11ac5"
 }
 
-$resourceGroupName =  $env:UserName + "-" + $resourceGroupName
+$resourceGroupName = $env:UserName + "-" + $resourceGroupName
 Enable-AzureRmAlias -Scope CurrentUser
 
 <#
