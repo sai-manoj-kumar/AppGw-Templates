@@ -1,0 +1,424 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "addressPrefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/16",
+            "metadata": {
+                "description": "Address prefix for the Virtual Network"
+            }
+        },
+        "subnetPrefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/28",
+            "metadata": {
+                "description": "Subnet prefix"
+            }
+        },
+        "skuName": {
+            "type": "string",
+            "defaultValue": "Standard_Medium",
+            "metadata": {
+                "description": "Sku Name"
+            }
+        },
+        "backendIpAddress1": {
+            "type": "string",
+            "metadata": {
+                "description": "IP Address for Backend Server 1"
+            }
+        },
+        "MSIVersion": {
+            "type": "string",
+            "defaultValue": "2015-08-31-PREVIEW",
+            "metadata": {
+                "description": "API version for msi extension"
+            }
+        },
+        "MSIPort": {
+            "type": "int",
+            "defaultValue": 50342,
+            "metadata": {
+                "description": "Default port for msi extension"
+            }
+        },
+        "Secrets": {
+            "type": "array",
+            "metadata": {
+                "description": "An array of json objects like this : {'name':name, 'value':value}"
+            }
+        },
+        "secretValue": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "applicationGatewayName": "[concat(resourceGroup().name, '-appgw')]",
+        "publicIPAddressName": "[concat(resourceGroup().name, '-publicIp')]",
+        "virtualNetworkName": "[concat(resourceGroup().name, '-vnet')]",
+        "subnetName": "subnet1",
+        "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
+        "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
+        "publicIPRef": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]",
+        "applicationGatewayID": "[resourceId('Microsoft.Network/applicationGateways',variables('applicationGatewayName'))]",
+        "apiVersion": "2018-12-01"
+    },
+    "resources": [
+        {
+            "apiVersion": "[variables('apiVersion')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[variables('publicIPAddressName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Static",
+                "dnsSettings": {
+                    "domainNameLabel": "[resourceGroup().name]"
+                }
+            }
+        },
+        {
+            "apiVersion": "[variables('apiVersion')]",
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[variables('virtualNetworkName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('addressPrefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('subnetName')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('subnetPrefix')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[variables('apiVersion')]",
+            "name": "[variables('applicationGatewayName')]",
+            "type": "Microsoft.Network/applicationGateways",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+                "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
+            ],
+            "properties": {
+                "sku": {
+                    "name": "[parameters('skuName')]",
+                    "tier": "Standard_v2",
+                    "capacity": 2
+                },
+                "sslCertificates": [
+                    {
+                        "name": "appGatewaySslCert",
+                        "properties": {
+                            "data": "[parameters('Secrets')[0].value]"
+                        }
+                    }
+                ],
+                "gatewayIPConfigurations": [
+                    {
+                        "name": "appGatewayIpConfig",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            }
+                        }
+                    }
+                ],
+                "frontendIPConfigurations": [
+                    {
+                        "name": "appGatewayFrontendIP",
+                        "properties": {
+                            "PublicIPAddress": {
+                                "id": "[variables('publicIPRef')]"
+                            }
+                        }
+                    }
+                ],
+                "frontendPorts": [
+                    {
+                        "name": "SecurePort",
+                        "properties": {
+                            "Port": 443
+                        }
+                    },
+                    {
+                        "name": "HttpPort",
+                        "properties": {
+                            "Port": 80
+                        }
+                    },
+                    {
+                        "name": "Port8080",
+                        "properties": {
+                            "Port": 8080
+                        }
+                    }
+                ],
+                "backendAddressPools": [
+                    {
+                        "name": "appGatewayBackendPool",
+                        "properties": {
+                            "BackendAddresses": [
+                                {
+                                    "IpAddress": "[parameters('backendIpAddress1')]"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "backendHttpSettingsCollection": [
+                    {
+                        "name": "appGatewayBackendHttpSettings",
+                        "properties": {
+                            "Port": 80,
+                            "Protocol": "Http",
+                            "CookieBasedAffinity": "Disabled",
+                            "PickHostNameFromBackendAddress": true,
+                            "probe": {
+                                "id": "[concat(variables('applicationGatewayID'), '/probes/HttpCustomProbe')]"
+                            }
+                        }
+                    }
+                ],
+                "httpListeners": [
+                    {
+                        "name": "SecureListener",
+                        "properties": {
+                            "FrontendIPConfiguration": {
+                                "Id": "[concat(variables('applicationGatewayID'), '/frontendIPConfigurations/appGatewayFrontendIP')]"
+                            },
+                            "FrontendPort": {
+                                "Id": "[concat(variables('applicationGatewayID'), '/frontendPorts/SecurePort')]"
+                            },
+                            "Protocol": "Https",
+                            "SslCertificate": {
+                                "Id": "[concat(variables('applicationGatewayID'), '/sslCertificates/appGatewaySslCert')]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "HttpListener",
+                        "properties": {
+                            "FrontendIPConfiguration": {
+                                "Id": "[concat(variables('applicationGatewayID'), '/frontendIPConfigurations/appGatewayFrontendIP')]"
+                            },
+                            "FrontendPort": {
+                                "Id": "[concat(variables('applicationGatewayID'), '/frontendPorts/HttpPort')]"
+                            },
+                            "Protocol": "Http"
+                        }
+                    },
+                    {
+                        "name": "CustomPortHttpListener",
+                        "properties": {
+                            "FrontendIPConfiguration": {
+                                "Id": "[concat(variables('applicationGatewayID'), '/frontendIPConfigurations/appGatewayFrontendIP')]"
+                            },
+                            "FrontendPort": {
+                                "Id": "[concat(variables('applicationGatewayID'), '/frontendPorts/Port8080')]"
+                            },
+                            "Protocol": "Http"
+                        }
+                    }
+                ],
+                "requestRoutingRules": [
+                    {
+                        "Name": "SecureRule1",
+                        "properties": {
+                            "RuleType": "Basic",
+                            "httpListener": {
+                                "id": "[concat(variables('applicationGatewayID'), '/httpListeners/SecureListener')]"
+                            },
+                            "backendAddressPool": {
+                                "id": "[concat(variables('applicationGatewayID'), '/backendAddressPools/appGatewayBackendPool')]"
+                            },
+                            "backendHttpSettings": {
+                                "id": "[concat(variables('applicationGatewayID'), '/backendHttpSettingsCollection/appGatewayBackendHttpSettings')]"
+                            },
+                            "rewriteRuleSet": {
+                                "id": "[concat(variables('applicationGatewayID'), '/rewriteRuleSets/rewriteRuleSet1')]"
+                            }
+                        }
+                    },
+                    {
+                        "Name": "HttpRule1",
+                        "properties": {
+                            "RuleType": "Basic",
+                            "httpListener": {
+                                "id": "[concat(variables('applicationGatewayID'), '/httpListeners/HttpListener')]"
+                            },
+                            "backendAddressPool": {
+                                "id": "[concat(variables('applicationGatewayID'), '/backendAddressPools/appGatewayBackendPool')]"
+                            },
+                            "backendHttpSettings": {
+                                "id": "[concat(variables('applicationGatewayID'), '/backendHttpSettingsCollection/appGatewayBackendHttpSettings')]"
+                            },
+                            "rewriteRuleSet": {
+                                "id": "[concat(variables('applicationGatewayID'), '/rewriteRuleSets/rewriteRuleSet1')]"
+                            }
+                        }
+                    },
+                    {
+                        "Name": "PathBasedRule1",
+                        "properties": {
+                            "RuleType": "PathBasedRouting",
+                            "httpListener": {
+                                "id": "[concat(variables('applicationGatewayID'), '/httpListeners/CustomPortHttpListener')]"
+                            },
+                            "urlPathMap": {
+                                "id": "[concat(variables('applicationGatewayID'), '/urlPathMaps/urlPathMap1')]"
+                            }
+                        }
+                    }
+                ],
+                "urlPathMaps": [
+                    {
+                        "name": "urlPathMap1",
+                        "properties": {
+                            "defaultBackendAddressPool": {
+                                "id": "[concat(variables('applicationGatewayID'), '/backendAddressPools/appGatewayBackendPool')]"
+                            },
+                            "defaultBackendHttpSettings": {
+                                "id": "[concat(variables('applicationGatewayID'), '/backendHttpSettingsCollection/appGatewayBackendHttpSettings')]"
+                            },
+                            "defaultRewriteRuleSet": {
+                                "id": "[concat(variables('applicationGatewayID'), '/rewriteRuleSets/rewriteRuleSet2')]"
+                            },
+                            "pathRules":[
+                                {
+                                    "name": "api",
+                                    "properties":{
+                                        "paths":[
+                                            "/api/*"
+                                        ],
+                                        "backendAddressPool":{
+                                            "id": "[concat(variables('applicationGatewayID'), '/backendAddressPools/appGatewayBackendPool')]"
+                                        },
+                                        "backendHttpSettings": {
+                                            "id": "[concat(variables('applicationGatewayID'), '/backendHttpSettingsCollection/appGatewayBackendHttpSettings')]"
+                                        },
+                                        "rewriteRuleSet": {
+                                            "id": "[concat(variables('applicationGatewayID'), '/rewriteRuleSets/rewriteRuleSet3')]"
+                                        }            
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "rewriteRuleSets": [
+                    {
+                        "name": "rewriteRuleSet1",
+                        "properties": {
+                            "rewriteRules": [
+                                {
+                                    "ruleSequence": 100,
+                                    "conditions": [
+                                        {
+                                            "variable": "var_client_ip",
+                                            "pattern": "",
+                                            "ignoreCase": true
+                                        }
+                                    ],
+                                    "name": "rewriteRule1_1",
+                                    "actionSet": {
+                                        "requestHeaderConfigurations": [
+                                            {
+                                                "headerName": "Accept-Charset",
+                                                "headerValue": "utf-8"
+                                            }
+                                        ],
+                                        "responseHeaderConfigurations": [
+                                            {
+                                                "headerName": "Content-MD5",
+                                                "headerValue": "Q2hlY2sgSW50ZWdyaXR5IQ=="
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "rewriteRuleSet2",
+                        "properties": {
+                            "rewriteRules": [
+                                {
+                                    "name": "rewriteRule2_1",
+                                    "actionSet": {
+                                        "requestHeaderConfigurations": [
+                                            {
+                                                "headerName": "Accept-Charset",
+                                                "headerValue": "utf-8"
+                                            }
+                                        ],
+                                        "responseHeaderConfigurations": [
+                                            {
+                                                "headerName": "Content-MD5",
+                                                "headerValue": "Q2hlY2sgSW50ZWdyaXR5IQ=="
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "rewriteRuleSet3",
+                        "properties": {
+                            "rewriteRules": [
+                                {
+                                    "name": "rewriteRule3_1",
+                                    "actionSet": {
+                                        "requestHeaderConfigurations": [
+                                            {
+                                                "headerName": "Accept-Charset",
+                                                "headerValue": "utf-8"
+                                            }
+                                        ],
+                                        "responseHeaderConfigurations": [
+                                            {
+                                                "headerName": "Content-MD5",
+                                                "headerValue": "Q2hlY2sgSW50ZWdyaXR5IQ=="
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "probes": [
+                    {
+                        "name": "HttpCustomProbe",
+                        "properties": {
+                            "protocol": "Http",
+                            "path": "/",
+                            "interval": 30,
+                            "timeout": 30,
+                            "unhealthyThreshold": 3,
+                            "pickHostNameFromBackendHttpSettings": true,
+                            "minServers": 0,
+                            "match": {
+                                "body": "",
+                                "statusCodes": [
+                                    "200-399"
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
