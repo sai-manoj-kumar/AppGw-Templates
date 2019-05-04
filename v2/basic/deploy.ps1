@@ -70,7 +70,7 @@ Function RegisterRP {
     )
 
     Write-Host "Registering resource provider '$ResourceProviderNamespace'";
-    Register-AzureRmResourceProvider -ProviderNamespace $ResourceProviderNamespace;
+    Register-AzResourceProvider -ProviderNamespace $ResourceProviderNamespace;
 }
 
 #******************************************************************************
@@ -80,13 +80,14 @@ Function RegisterRP {
 $ErrorActionPreference = "Stop"
 
 function Login {
-    if ([string]::IsNullOrEmpty($(Get-AzureRmContext).Account)) {
-        Write-Host "Not Logged in yet";
-        Login-AzureRmAccount
-    }
-    else {
+    # if ([string]::IsNullOrEmpty($(Get-AzContext).Account)) {
+    #     Write-Host "Not Logged in yet";
+    #     Connect-AzAccount
+    #     #Login-AzureRmAccount
+    # }
+    # else {
         Write-Host "Already Logged in";
-    }
+    # }
 }
 
 # Login if not already logged in
@@ -94,7 +95,7 @@ Login
 
 # select subscription
 Write-Host "Selecting subscription '$subscriptionId'";
-Select-AzureRmSubscription -SubscriptionID $subscriptionId;
+Select-AzSubscription -SubscriptionID $subscriptionId;
 
 # Register RPs
 $resourceProviders = @("microsoft.network", "microsoft.compute", "microsoft.storage", "microsoft.devtestlab");
@@ -106,7 +107,7 @@ if ($resourceProviders.length) {
 }
 
 #Create or check for existing resource group
-$resourceGroup = Get-AzureRmResourceGroup -Name $resourceGroupName -ErrorAction SilentlyContinue
+$resourceGroup = Get-AzResourceGroup -Name $resourceGroupName -ErrorAction SilentlyContinue
 if (!$resourceGroup) {
     Write-Host "Resource group '$resourceGroupName' does not exist. To create a new resource group, please enter a location.";
     if (!$resourceGroupLocation) {
@@ -114,7 +115,7 @@ if (!$resourceGroup) {
     }
     Write-Host "Creating resource group '$resourceGroupName' in location '$resourceGroupLocation'";
     $now = Get-Date
-    New-AzureRmResourceGroup -Name $resourceGroupName -Location $resourceGroupLocation -Tag @{'CreatedBy' = $env:UserName; 'ExpiresBy' = $now.ToUniversalTime().AddDays(3).GetDateTimeFormats()[8]}
+    New-AzResourceGroup -Name $resourceGroupName -Location $resourceGroupLocation -Tag @{'CreatedBy' = $env:UserName; 'ExpiresBy' = $now.ToUniversalTime().AddDays(3).GetDateTimeFormats()[8]}
 }
 else {
     Write-Host "Using existing resource group '$resourceGroupName'";
@@ -123,8 +124,8 @@ else {
 # Start the deployment
 Write-Host "Starting deployment...";
 if (Test-Path $parametersFilePath) {
-    $lasterror = New-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile $templateFilePath -TemplateParameterFile $parametersFilePath
+    $lasterror = New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile $templateFilePath -TemplateParameterFile $parametersFilePath
 }
 else {
-    New-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile $templateFilePath
+    New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile $templateFilePath
 }
